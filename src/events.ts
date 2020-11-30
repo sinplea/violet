@@ -1,4 +1,5 @@
 import Rooms from "./rooms.ts";
+import type { Redis } from "https://deno.land/x/redis/mod.ts";
 import type { RoomEvent } from "./types.ts";
 
 enum Events {
@@ -6,11 +7,11 @@ enum Events {
   RoomJoin = "room-joined",
 }
 
-export function interpret(event: RoomEvent) {
+export function interpret(redis: Redis, event: RoomEvent) {
   switch (event.kind) {
     case Events.RoomCreate:
-      return Rooms.create(event.data);
+      return Rooms.create(redis, event);
     case Events.RoomJoin:
-      return Rooms.join(event.data);
+      return Rooms.join(redis, event);
   }
 }
