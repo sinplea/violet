@@ -6,23 +6,37 @@
   <title>Websocket Test</title>
 </head>
 <body>
-  <button>Click to send JSON</button>
+  <button>Click to Create Room</button>
   <script>
     const button = document.querySelector('button');
     const socket = new WebSocket('ws://localhost:8080');
 
     button.addEventListener('click', event => {
-      const obj = {
-        name: 'Alex',
-        server: 'deno',
+      const roomJoinedEvent = {
+        kind: 'room-joined',
+        room_id: 'ROOM:2',
+        prev_room_id: 'ROOM:1',
+        socket_id: 'SOCKET:1'
       };
 
-      socket.send(JSON.stringify(obj));
+      const roomCreatedEvent = {
+        kind: 'room-created',
+        socket_id: 'Socket:1',
+        details: {
+          thumbnail: 'url://thumbnail',
+          title: 'Perfect Blue',
+          topic: 'Satoshi Kon clips',
+          watchers: '2',
+          visibility: 'Public',
+        },
+      };
+
+      socket.send(JSON.stringify(roomCreatedEvent));
     });
 
     // Connection opened
     socket.addEventListener('open', function (event) {
-        socket.send('Hello Server!');
+      console.log('Socket opened on localhost:8080');
     });
 
     // Listen for messages
